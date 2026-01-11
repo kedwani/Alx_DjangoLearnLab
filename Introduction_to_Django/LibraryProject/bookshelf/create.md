@@ -1,16 +1,12 @@
-# Creating a Book Object
+# Create Book
 
-You can create a new book record in the database using Django ORM.
+## Command
 
-## Example
-
-
+```python
 from bookshelf.models import Book
 
 Book.objects.create(
-    title="Clean Code",
-    author="Robert C. Martin",
-    publication_year=2008
+    title ="1984",
+    author ="George Orwell",
+    publication_year = 1949
 )
-
-

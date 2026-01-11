@@ -1,0 +1,1 @@
+a README.md for the first project to create with django

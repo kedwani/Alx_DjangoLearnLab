@@ -1,4 +1,4 @@
-from bookshelf.modles import Book
+from bookshelf.models import Book
 book = Book.objects.get(author = "George Orwell")
 book.delete()
 books = Book.objects.all()

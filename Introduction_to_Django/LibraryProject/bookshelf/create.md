@@ -1,2 +1,2 @@
-book = (title= '1984', author = "George Orwell", publication_year = 1949)
+Book.objects.creat(title= '1984', author = "George Orwell", publication_year = 1949)
 #expected output  is none

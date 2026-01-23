@@ -1,0 +1,13 @@
+from django.db import models
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+    publication_year = models.IntegerField()
+
+    def __str__(self):
+        return f" book title is:- {self.title}, author is:-  {self.author}, and publication year is :- {self.publication_year}"
+
+
+# Create your models here.

@@ -8,13 +8,13 @@ from .models import CustomUser, Author, Book, Library, Librarian, UserProfile
 # ---------------------------------------
 class CustomUserAdmin(UserAdmin):
     """
-    Admin interface for CustomUser model.
+    Admin panel configuration for CustomUser.
     Extends the default UserAdmin to include custom fields.
     """
 
     model = CustomUser
 
-    # Fields to display in the user list
+    # Display these fields in the user list view
     list_display = (
         "username",
         "email",
@@ -22,24 +22,25 @@ class CustomUserAdmin(UserAdmin):
         "last_name",
         "date_of_birth",
         "is_staff",
+        "is_active",
     )
 
-    # Fields to filter by in the sidebar
+    # Add filters for these fields
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
 
-    # Fields to search by
+    # Enable search on these fields
     search_fields = ("username", "email", "first_name", "last_name")
 
-    # Order by username
+    # Default ordering
     ordering = ("username",)
 
-    # Fieldsets for editing existing users
+    # Fieldsets for viewing/editing existing users
     fieldsets = UserAdmin.fieldsets + (
         (
-            "Additional Information",
+            "Additional Info",
             {
                 "fields": ("date_of_birth", "profile_photo"),
-                "description": "Additional user profile information",
+                "description": "Extended user information",
             },
         ),
     )
@@ -47,22 +48,24 @@ class CustomUserAdmin(UserAdmin):
     # Fieldsets for adding new users
     add_fieldsets = UserAdmin.add_fieldsets + (
         (
-            "Additional Information",
+            "Additional Info",
             {
                 "fields": ("date_of_birth", "profile_photo"),
-                "description": "Optional additional information",
+                "description": "Optional: Add date of birth and profile photo",
             },
         ),
     )
 
 
-# ---------------------------------------
-# Register Models
-# ---------------------------------------
+# Register CustomUser with CustomUserAdmin
 admin.site.register(CustomUser, CustomUserAdmin)
 
 
-# Optional: Register other models
+# ---------------------------------------
+# Other Model Admin Configurations
+# ---------------------------------------
+
+
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ("name",)
@@ -94,3 +97,8 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ("user", "role")
     list_filter = ("role",)
     search_fields = ("user__username", "user__email")
+
+    # Make it easier to see which user has which role
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related("user")

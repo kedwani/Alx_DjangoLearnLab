@@ -1,92 +1,123 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+"""
+Django settings for LibraryProject project.
+"""
 
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = "django-insecure-)_q=66=y!%m(wmxir2iv_f3e!=&n)w-)&y8=#5os3an*ww#r*9"
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "bookshelf",
+    "relationship_app",
+]
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+ROOT_URLCONF = "LibraryProject.urls"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = "LibraryProject.wsgi.application"
 
 # ---------------------------------------
-# Custom User Manager
+# Custom User Model Configuration
 # ---------------------------------------
-class CustomUserManager(BaseUserManager):
-    """
-    Custom user manager for CustomUser model.
-    Handles user creation with additional fields.
-    """
+# CRITICAL: Must point to the app where CustomUser is defined
+AUTH_USER_MODEL = "relationship_app.CustomUser"
 
-    def create_user(
-        self, username, email, date_of_birth=None, password=None, **extra_fields
-    ):
-        """
-        Create and save a regular user with the given username, email, and password.
-        """
-        if not email:
-            raise ValueError("The Email field must be set")
-        if not username:
-            raise ValueError("The Username field must be set")
+# Database
+# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-        email = self.normalize_email(email)
-        user = self.model(
-            username=username, email=email, date_of_birth=date_of_birth, **extra_fields
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        """
-        Create and save a superuser with the given username, email, and password.
-        """
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
-
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-
-        return self.create_user(username, email, password=password, **extra_fields)
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
 
-# ---------------------------------------
-# Custom User Model
-# ---------------------------------------
-class CustomUser(AbstractUser):
-    """
-    Custom user model extending AbstractUser.
-    Adds date_of_birth and profile_photo fields.
-    """
+# Password validation
+# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
-    date_of_birth = models.DateField(
-        null=True, blank=True, help_text="User's date of birth"
-    )
-    profile_photo = models.ImageField(
-        upload_to="profile_photos/",
-        null=True,
-        blank=True,
-        help_text="User's profile photo",
-    )
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
 
-    objects = CustomUserManager()
 
-    class Meta:
-        verbose_name = "User"
-        verbose_name_plural = "Users"
+# Internationalization
+# https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-    def __str__(self):
-        return self.username
+LANGUAGE_CODE = "en-us"
 
-    def get_age(self):
-        """
-        Calculate and return the user's age if date_of_birth is set.
-        """
-        if self.date_of_birth:
-            from datetime import date
+TIME_ZONE = "UTC"
 
-            today = date.today()
-            age = today.year - self.date_of_birth.year
-            if today.month < self.date_of_birth.month or (
-                today.month == self.date_of_birth.month
-                and today.day < self.date_of_birth.day
-            ):
-                age -= 1
-            return age
-        return None
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/6.0/howto/static-files/
+
+STATIC_URL = "static/"
+
+# Media files configuration for profile photos
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import permission_required, user_passes_test
 from django.views.generic.detail import DetailView
 from .models import Book, Library
+from .models import Library
 
 # ---------- Existing Views ----------
 

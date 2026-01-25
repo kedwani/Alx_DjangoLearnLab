@@ -1,19 +1,25 @@
 from django.urls import path
-from .views import list_books, LibraryDetailView, RegisterView, LoginView, LogoutView
-from django.views.generic import TemplateView
+from . import views
+from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
     # Existing views
-    path("books/", list_books, name="list_books"),
-    path("library/<int:pk>/", LibraryDetailView.as_view(), name="library_detail"),
-    # Authentication views
-    path("register/", RegisterView.as_view(), name="register"),
-    path("login/", LoginView.as_view(), name="login"),
-    path("logout/", LogoutView.as_view(), name="logout"),
-    # Simple home page (after login)
+    path("books/", views.list_books, name="list_books"),
+    path("library/<int:pk>/", views.LibraryDetailView.as_view(), name="library_detail"),
+    # Authentication URLs
+    path("register/", views.RegisterView.as_view(), name="register"),
     path(
-        "",
-        TemplateView.as_view(template_name="relationship_app/home.html"),
-        name="home",
+        "login/",
+        LoginView.as_view(template_name="relationship_app/login.html"),
+        name="login",
     ),
+    path(
+        "logout/",
+        LogoutView.as_view(template_name="relationship_app/logout.html"),
+        name="logout",
+    ),
+    # Home page
+    path(
+        "", views.LibraryDetailView.as_view(), name="home"
+    ),  # ممكن تغيرها لأي template تاني
 ]

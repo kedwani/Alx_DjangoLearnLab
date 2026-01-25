@@ -1,11 +1,9 @@
 from django.http import HttpResponse
 from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout
-from django.views import View
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from .models import Book, Library
-
 
 # ---------- Existing Views ----------
 
@@ -26,7 +24,9 @@ class LibraryDetailView(DetailView):
     context_object_name = "library"
 
 
-# ---------- Authentication Views ----------
+# ---------- Registration View ----------
+
+from django.views import View
 
 
 class RegisterView(View):
@@ -38,26 +38,6 @@ class RegisterView(View):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Log in after registration
-            return redirect("home")  # Redirect to home page
+            login(request, user)  # تسجيل الدخول مباشرة بعد التسجيل
+            return redirect("home")
         return render(request, "relationship_app/register.html", {"form": form})
-
-
-class LoginView(View):
-    def get(self, request):
-        form = AuthenticationForm()
-        return render(request, "relationship_app/login.html", {"form": form})
-
-    def post(self, request):
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect("home")  # Redirect to home page
-        return render(request, "relationship_app/login.html", {"form": form})
-
-
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
-        return render(request, "relationship_app/logout.html")

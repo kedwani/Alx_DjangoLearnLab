@@ -70,7 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "LibraryProject.wsgi.application"
 
-AUTH_USER_MODEL = "your_app_name.CustomUser"
+AUTH_USER_MODEL = "bookshelf.CustomUser"  # غير الاسم حسب اسم التطبيق
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases

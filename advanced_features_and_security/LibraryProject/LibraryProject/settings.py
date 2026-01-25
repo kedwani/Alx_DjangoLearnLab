@@ -65,8 +65,8 @@ WSGI_APPLICATION = "LibraryProject.wsgi.application"
 # ---------------------------------------
 # Custom User Model Configuration
 # ---------------------------------------
-# CRITICAL: Must point to the app where CustomUser is defined
-AUTH_USER_MODEL = "relationship_app.CustomUser"
+# IMPORTANT: CustomUser is now in the bookshelf app
+AUTH_USER_MODEL = "bookshelf.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases

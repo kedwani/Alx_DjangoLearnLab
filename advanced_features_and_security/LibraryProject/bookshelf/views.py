@@ -16,6 +16,7 @@ from django.utils.html import escape
 from .models import Book
 from .forms import BookForm, ExampleForm
 import logging
+from .forms import ExampleForm
 
 # Set up logging for security events
 logger = logging.getLogger(__name__)

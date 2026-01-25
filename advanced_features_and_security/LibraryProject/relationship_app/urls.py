@@ -1,13 +1,12 @@
 from django.urls import path
-from . import views
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import list_books
+from . import views
 
-# ---------- URL Patterns ----------
-# "add_book/" , "edit_book/""
+
 urlpatterns = [
-    # Existing views
+    # Book listing (public)
     path("books/", views.list_books, name="list_books"),
+    # Library details
     path("library/<int:pk>/", views.LibraryDetailView.as_view(), name="library_detail"),
     # Authentication
     path("register/", views.register, name="register"),
@@ -25,8 +24,13 @@ urlpatterns = [
     path("admin-view/", views.admin_view, name="admin_view"),
     path("librarian-view/", views.librarian_view, name="librarian_view"),
     path("member-view/", views.member_view, name="member_view"),
-    # ---------- Book CRUD (Custom Permissions) ----------
-    path("book/add/", views.add_book, name="add_book"),  # Add Book
-    path("book/edit/<int:pk>/", views.edit_book, name="edit_book"),  # Edit Book
-    path("book/delete/<int:pk>/", views.delete_book, name="delete_book"),  # Delete Book
+    # Permission-Protected Book CRUD Views
+    path("books/view/", views.view_books, name="view_books"),  # Requires can_view
+    path("books/add/", views.add_book, name="add_book"),  # Requires can_create
+    path(
+        "books/<int:pk>/edit/", views.edit_book, name="edit_book"
+    ),  # Requires can_edit
+    path(
+        "books/<int:pk>/delete/", views.delete_book, name="delete_book"
+    ),  # Requires can_delete
 ]

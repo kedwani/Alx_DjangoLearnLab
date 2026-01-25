@@ -1,9 +1,16 @@
+<!-- list_books.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Books</title>
+    <meta charset="UTF-8">
+    <title>List of Books</title>
 </head>
 <body>
-    <h1>Books List</h1>
+    <h1>Books Available:</h1>
+    <ul>
+        {% for book in books %}
+        <li>{{ book.title }} by {{ book.author.name }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

@@ -93,12 +93,30 @@ class CustomUser(AbstractUser):
 
 
 # ---------------------------------------
-# Book Model (Original)
+# Book Model with Custom Permissions
 # ---------------------------------------
 class Book(models.Model):
+    """
+    Book model with custom permissions for fine-grained access control.
+
+    Custom Permissions:
+    - can_view: Allows viewing books
+    - can_create: Allows creating new books
+    - can_edit: Allows editing existing books
+    - can_delete: Allows deleting books
+    """
+
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
 
     def __str__(self):
         return f"book title is:- {self.title}, author is:-  {self.author}, and publication year is :- {self.publication_year}"

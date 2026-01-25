@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>Secure Form Example</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .errorlist {
+            color: #dc3545;
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+        }
+        .helptext {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Secure Form Example</h1>
+    
+    <p>This form demonstrates Django security best practices:</p>
+    <ul>
+        <li>CSRF protection</li>
+        <li>Input validation and sanitization</li>
+        <li>XSS prevention through auto-escaping</li>
+        <li>Field-level and form-level validation</li>
+    </ul>
+    
+    <!-- Display form-level errors -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    
+    <!-- Secure Form with CSRF Protection -->
+    <form method="post" action="">
+        <!-- 
+            CRITICAL SECURITY MEASURE: CSRF Token
+            
+            This token protects against Cross-Site Request Forgery attacks.
+            Without this, attackers could trick users into submitting forms
+            on your site without their knowledge.
+            
+            The {% csrf_token %} tag generates a hidden input field with a
+            unique token that is validated on the server side.
+        -->
+        {% csrf_token %}
+        
+        <!-- Name Field -->
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Name:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <ul class="errorlist">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if form.name.help_text %}
+                <p class="helptext">{{ form.name.help_text }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- Email Field -->
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="errorlist">
+                    {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if form.email.help_text %}
+                <p class="helptext">{{ form.email.help_text }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- Age Field -->
+        <div class="form-group">
+            <label for="{{ form.age.id_for_label }}">Age:</label>
+            {{ form.age }}
+            {% if form.age.errors %}
+                <ul class="errorlist">
+                    {% for error in form.age.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if form.age.help_text %}
+                <p class="helptext">{{ form.age.help_text }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- Message Field -->
+        <div class="form-group">
+            <label for="{{ form.message.id_for_label }}">Message:</label>
+            {{ form.message }}
+            {% if form.message.errors %}
+                <ul class="errorlist">
+                    {% for error in form.message.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if form.message.help_text %}
+                <p class="helptext">{{ form.message.help_text }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- Terms Agreement -->
+        <div class="form-group">
+            <label>
+                {{ form.agree_to_terms }}
+                I agree to the terms and conditions
+            </label>
+            {% if form.agree_to_terms.errors %}
+                <ul class="errorlist">
+                    {% for error in form.agree_to_terms.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+    <!-- Security Information -->
+    <div style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 4px;">
+        <h3>Security Features in This Form:</h3>
+        <ol>
+            <li><strong>CSRF Protection:</strong> The {% csrf_token %} tag prevents cross-site request forgery attacks.</li>
+            <li><strong>Input Validation:</strong> All fields are validated on the server side using Django forms.</li>
+            <li><strong>XSS Prevention:</strong> Django automatically escapes all output to prevent cross-site scripting.</li>
+            <li><strong>SQL Injection Prevention:</strong> Using Django ORM prevents SQL injection attacks.</li>
+            <li><strong>Sanitization:</strong> Custom clean methods remove dangerous characters and patterns.</li>
+        </ol>
+    </div>
+</body>
+</html>

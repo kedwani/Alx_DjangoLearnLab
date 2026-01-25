@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security Headers (also set in middleware) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>Book List - Secure Library</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            padding: 8px;
+            width: 300px;
+        }
+        .search-box button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .actions a {
+            margin-right: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .actions a:hover {
+            text-decoration: underline;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Library</h1>
+    
+    <!-- Search Form with CSRF Protection -->
+    <div class="search-box">
+        <form method="get" action="{% url 'book_list' %}">
+            <!-- GET requests don't need CSRF token, but POST would -->
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search books..." 
+                value="{{ search_query|escape }}"
+                maxlength="200"
+            >
+            <button type="submit">Search</button>
+            {% if search_query %}
+                <a href="{% url 'book_list' %}">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+    
+    <!-- Display search results count -->
+    {% if search_query %}
+        <div class="message">
+            <!-- Auto-escaping prevents XSS attacks -->
+            Found {{ books|length }} result{{ books|length|pluralize }} for "{{ search_query }}"
+        </div>
+    {% endif %}
+    
+    <!-- Permissions-based action buttons -->
+    {% if perms.bookshelf.can_create %}
+        <p><a href="{% url 'book_create' %}">Add New Book</a></p>
+    {% endif %}
+    
+    <!-- Books Table -->
+    {% if books %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publication Year</th>
+                    {% if perms.bookshelf.can_edit or perms.bookshelf.can_delete %}
+                        <th>Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                    <tr>
+                        <!-- Django auto-escapes variables to prevent XSS -->
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.publication_year }}</td>
+                        
+                        {% if perms.bookshelf.can_edit or perms.bookshelf.can_delete %}
+                            <td class="actions">
+                                {% if perms.bookshelf.can_edit %}
+                                    <a href="{% url 'book_edit' book.pk %}">Edit</a>
+                                {% endif %}
+                                {% if perms.bookshelf.can_delete %}
+                                    <a href="{% url 'book_delete' book.pk %}">Delete</a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No books found.</p>
+    {% endif %}
+</body>
+</html>

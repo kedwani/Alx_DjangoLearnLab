@@ -250,3 +250,34 @@ if DEBUG:
         "'unsafe-eval'",
         "https://cdnjs.cloudflare.com",
     )
+# --- Security Settings for HTTPS and Secure Headers ---
+
+# 1. Enforce HTTPS Redirects
+# Redirects all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# 2. HTTP Strict Transport Security (HSTS)
+# Instructs browsers to only use HTTPS for the next year (31536000 seconds)
+SECURE_HSTS_SECONDS = 31536000
+# Applies HSTS policy to all subdomains
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# Allows the site to be included in browser HSTS preload lists
+SECURE_HSTS_PRELOAD = True
+
+# 3. Secure Cookies
+# Ensures session cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+# Ensures CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+# 4. Secure HTTP Headers
+# Prevents the site from being rendered in an iframe (protects against clickjacking)
+X_FRAME_OPTIONS = "DENY"
+# Prevents browsers from guessing the content type (prevents MIME-sniffing)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# Enables browser's XSS filtering and prevents rendering of pages if XSS is detected
+SECURE_BROWSER_XSS_FILTER = True
+
+# 5. Proxy Header (Optional but recommended for many cloud providers)
+# Tells Django to trust the X-Forwarded-Proto header from a proxy to detect HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

@@ -3,10 +3,10 @@ from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
-    # ---------- Existing Views ----------
+    # Existing views
     path("books/", views.list_books, name="list_books"),
     path("library/<int:pk>/", views.LibraryDetailView.as_view(), name="library_detail"),
-    # ---------- Authentication ----------
+    # Authentication
     path("register/", views.register, name="register"),
     path(
         "login/",
@@ -18,14 +18,12 @@ urlpatterns = [
         LogoutView.as_view(template_name="relationship_app/logout.html"),
         name="logout",
     ),
-    # ---------- Role-Based Views ----------
+    # Role-Based Views
     path("admin-view/", views.admin_view, name="admin_view"),
     path("librarian-view/", views.librarian_view, name="librarian_view"),
     path("member-view/", views.member_view, name="member_view"),
     # ---------- Book CRUD (Custom Permissions) ----------
-    path("book/add/", views.add_book, name="add_book"),
-    path("book/edit/<int:pk>/", views.edit_book, name="edit_book"),
-    path("book/delete/<int:pk>/", views.delete_book, name="delete_book"),
-    # ---------- Home Page ----------
-    path("", views.LibraryDetailView.as_view(), name="home"),
+    path("book/add/", views.add_book, name="add_book"),  # Add Book
+    path("book/edit/<int:pk>/", views.edit_book, name="edit_book"),  # Edit Book
+    path("book/delete/<int:pk>/", views.delete_book, name="delete_book"),  # Delete Book
 ]

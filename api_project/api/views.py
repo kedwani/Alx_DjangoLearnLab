@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets, filters
+from rest_framework import generics, viewsets, filters, permissions
 from .models import Book
 from .serializers import BookSerializer
 
@@ -13,7 +13,7 @@ class BookList(generics.ListAPIView):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     # Adding Search and Ordering capabilities
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title", "author"]

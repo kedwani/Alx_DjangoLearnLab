@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Author(models.Model):
-    """Stores author names. One author can have many books."""
+    """Model representing an author with a name field."""
 
     name = models.CharField(max_length=255)
 
@@ -11,7 +11,7 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    """Stores book details linked to an author via a ForeignKey."""
+    """Model representing a book with title, year, and author relationship."""
 
     title = models.CharField(max_length=255)
     publication_year = models.IntegerField()
